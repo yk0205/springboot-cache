@@ -14,7 +14,8 @@ HELP.md
 ### IntelliJ IDEA ###
 .idea
 .idea/idea/misc.xml
-
+.idea/libraries/*
+.idea/*
 *.iws
 *.iml
 *.ipr
