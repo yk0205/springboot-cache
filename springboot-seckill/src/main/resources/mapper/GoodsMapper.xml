@@ -29,7 +29,13 @@
     ON mg.goods_id = g.id
     where g.id = #{id,jdbcType=BIGINT}
   </select>
+  
+  <update id="reduceStock" >
+    u
 
+
+
+  </update>
 
 
 

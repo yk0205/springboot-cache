@@ -6,6 +6,8 @@ import com.yk.pojo.LoginVo;
 import com.yk.pojo.MiaoshaUser;
 import com.yk.redis.RedisService;
 import com.yk.redis.prefix.MiaoshaUserKey;
+import com.yk.result.CodeMsg;
+import com.yk.utils.MD5Util;
 import com.yk.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,10 @@ public class MiaoshaUserService {
     public static final String COOKIE_NAME_TOKEN = "token";
 
     @Resource
-    MiaoshaUserDao miaoshaUserDao;
+    private MiaoshaUserDao miaoshaUserDao;
 
     @Autowired
-    RedisService redisService;
+    private RedisService redisService;
 
     /**
      * 根据id取得对象，先去缓存中取
@@ -48,13 +50,31 @@ public class MiaoshaUserService {
         return user;
     }
 
-    public void login(HttpServletResponse response, LoginVo loginVo) {
-        MiaoshaUser user = new MiaoshaUser();
-        user.setNickname(loginVo.getMobile());
-        user.setPwd(loginVo.getPassword());
+    public CodeMsg login(HttpServletResponse response, LoginVo loginVo) {
+        if(loginVo==null) {
+            return CodeMsg.SERVER_ERROR;
+        }
+        //经过了依次MD5的密码
+        String mobile=loginVo.getMobile();
+        String formPass=loginVo.getPassword();
+        //判断手机号是否存在
+        MiaoshaUser user=getById(Long.parseLong(mobile));
+        if(user == null){
+            return CodeMsg.NO_USER;
+        }
+
+        String dbPass=user.getPwd();
+        String dbSalt=user.getSalt();
+        System.out.println("dbPass:"+dbPass+"   dbSalt:"+dbSalt);
+        //验证密码，计算二次MD5出来的pass是否与数据库一致
+        String tmppass=MD5Util.formPassToDBPass(formPass, dbSalt);
+        if(!tmppass.equals(dbPass)) {
+            return CodeMsg.PASSWORD_ERROR;
+        }
         //生成cookie
         String token = UUIDUtil.uuid();
         addCookie(response, token, user);
+        return CodeMsg.SUCCESS;
     }
 
 

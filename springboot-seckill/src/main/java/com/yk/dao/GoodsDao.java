@@ -2,6 +2,7 @@ package com.yk.dao;
 
 import com.yk.pojo.Goods;
 import com.yk.pojo.GoodsVo;
+import com.yk.pojo.MiaoshaGoods;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,7 +15,6 @@ public interface GoodsDao {
     List<GoodsVo> getGoodsVoList();
 
 
-    int updateByPrimaryKeySelective(Goods record);
-    int updateByPrimaryKeyWithBLOBs(Goods record);
-    int updateByPrimaryKey(Goods record);
+
+
 }

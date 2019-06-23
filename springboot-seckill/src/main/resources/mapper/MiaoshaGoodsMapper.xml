@@ -135,4 +135,16 @@
       end_date = #{endDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <update id="reduceStock"   parameterType="com.yk.pojo.MiaoshaGoods" >
+    update miaosha_goods
+    set stock_count=stock_count-1
+    where goods_id=#{goodsId}
+    and stock_count>0
+  </update>
+
+
+
+
 </mapper>
