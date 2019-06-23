@@ -64,7 +64,7 @@ public class MiaoshaController {
         model.addAttribute("goods", goodsvo);
         model.addAttribute("orderinfo", orderinfo);
         model.addAttribute("user", user);
-        return "login";//返回页面login
+        return "order_detail";//返回支付页面
     }
 
 
