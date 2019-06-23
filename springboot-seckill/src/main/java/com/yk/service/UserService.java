@@ -1,6 +1,6 @@
 package com.yk.service;
 
-import com.yk.dao.UserMapper;
+import com.yk.dao.UserDao;
 import com.yk.pojo.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,11 +15,11 @@ public class UserService {
     private final Log log = LogFactory.getLog(this.getClass());
 
     @Resource
-    private UserMapper userMapper;
+    private UserDao userDao;
 
 
     public User getUser(String username,String password){
-        userMapper.selectByPrimaryKey(0);
+        userDao.selectByPrimaryKey(0);
         return  null;
     }
 

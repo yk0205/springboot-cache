@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface MiaoshaUserDao {
+
 	@Select("select * from miaosha_user where id=#{id}")  //这里#{id}通过后面参数来为其赋值
 	public MiaoshaUser getById(@Param("id") long id);    //绑定
 	
@@ -15,6 +16,5 @@ public interface MiaoshaUserDao {
 	@Update("update miaosha_user set pwd=#{pwd} where id=#{id}")
 	public void update(MiaoshaUser toupdateuser);
 	
-	//public boolean update(@Param("id")long id);    //绑定
-	
+
 }

@@ -2,18 +2,15 @@ package com.yk.controller;
 
 
 
-import com.yk.pojo.Employee;
 import com.yk.pojo.User;
 import com.yk.redis.RedisService;
 import com.yk.redis.prefix.UserKey;
 import com.yk.result.Result;
-import com.yk.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
-
 
     @Autowired
     private RedisService redisService;
