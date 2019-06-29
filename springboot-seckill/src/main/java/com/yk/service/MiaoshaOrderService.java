@@ -3,6 +3,8 @@ package com.yk.service;
 import com.yk.dao.MiaoshaOrderDao;
 import com.yk.dao.OrderInfoDao;
 import com.yk.pojo.*;
+import com.yk.redis.RedisService;
+import com.yk.redis.prefix.OrderKey;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,10 @@ public class MiaoshaOrderService {
     private MiaoshaOrderDao miaoshaOrderDao;
     @Resource
     private OrderInfoDao orderInfoDao;
+    @Resource
+    private RedisService redisService;
+
+
 
     public MiaoshaOrder getMiaoshaOrderByUserIdAndCoodsId(Long userid, long goodsId) {
         MiaoshaOrder order = miaoshaOrderDao.getMiaoshaOrderByUserIdAndCoodsId(userid, goodsId);
@@ -49,11 +55,9 @@ public class MiaoshaOrderService {
         miaoshaorder.setOrderId(orderInfo.getId());
         miaoshaorder.setUserId(user.getId());
         miaoshaOrderDao.insert(miaoshaorder);
+        redisService.set(OrderKey.getMiaoshaOrderByUidGid,""+user.getId()+"_"+goodsvo.getId(),miaoshaorder);
+
         return orderInfo;
     }
-
-
-
-
 
 }

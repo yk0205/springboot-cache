@@ -1,5 +1,6 @@
 package com.yk;
 
+import com.yk.activemq.ActiveMqProducer;
 import com.yk.redis.RedisConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,10 @@ public class SpringbootSeckillApplicationTests {
     @Autowired(required = true)
     JedisPool jedisPool;
 
+    @Autowired
+    ActiveMqProducer activeMqProducer;
+
+
     @Test
     public void contextLoads() {
 
@@ -27,6 +32,12 @@ public class SpringbootSeckillApplicationTests {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set("11","111");
         }
+    }
+    @Test
+    public void testActimq() {
+        activeMqProducer.sendMsg("yangkai ","aa");
+        logger.info("activeMqProducer : " + 1111);
+
     }
 
 }

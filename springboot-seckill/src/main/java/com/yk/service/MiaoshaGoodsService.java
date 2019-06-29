@@ -25,4 +25,9 @@ public class MiaoshaGoodsService {
         return i>0;
 
     }
+    public boolean reduceStock(long goodsId) {
+        int i = miaoshaGoodsDao.reduceStock(goodsId);
+        return i>0;
+
+    }
 }

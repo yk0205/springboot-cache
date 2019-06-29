@@ -1,24 +1,16 @@
 package com.yk.redis.prefix;
 
 
-public abstract class OrderKey implements KeyPrefix {
+public abstract class OrderKey extends BasePrefix{
 
-    private int expireSeconds;
-
-    private String prefix;
+    public static final int TOKEN_EXPIRE=3600*24*2;//3600S*24*2    =2天
 
     public OrderKey(int expireSeconds, String prefix) {
-        this.expireSeconds = expireSeconds;
-        this.prefix = prefix;
+        super(expireSeconds, prefix);
     }
 
-    @Override
-    public int expireSeconds() {  //  默认0代表永不过期
-        return expireSeconds;
-    }
+    public static MiaoshaUserKey getMiaoshaOrderByUidGid =new MiaoshaUserKey(TOKEN_EXPIRE,"mo");
 
-    @Override
-    public String getPrefix() {
-        return  prefix;
-    }
+
+
 }
