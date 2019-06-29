@@ -4,14 +4,22 @@ import com.yk.pojo.Goods;
 import com.yk.pojo.GoodsVo;
 import com.yk.pojo.MiaoshaUser;
 import com.yk.redis.RedisService;
+import com.yk.redis.prefix.GoodsKey;
 import com.yk.service.GoodsService;
 import com.yk.service.MiaoshaUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.IContext;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.context.webflux.SpringWebFluxContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -29,13 +37,31 @@ public class GoodsController {
     @Autowired
     GoodsService goodsService;
 
-    @RequestMapping("/to_list")
-    public String toList(Model model, MiaoshaUser user) {
+    @Autowired
+    ThymeleafViewResolver thymeleafViewResolver;
+
+
+    @RequestMapping(value = "/to_list", produces = "text/html")
+    @ResponseBody
+    public String toList(HttpServletResponse response, HttpServletRequest request, Model model, MiaoshaUser user) {
         //查询商品列表
         List<GoodsVo> goodsList = goodsService.getGoodsVoList();
         model.addAttribute("goodsList", goodsList);
+
+        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
+        if (!StringUtils.isBlank(html)) {
+            return html;
+        }
+
+        WebContext ctx = new WebContext(request, response, request.getServletContext(), request.getLocale(), model.asMap());
+
+        html = thymeleafViewResolver.getTemplateEngine().process("goods_list", ctx);
+        if (!StringUtils.isBlank(html)) {
+            redisService.set(GoodsKey.getGoodsList, "", html);
+        }
+
         model.addAttribute("user", user);
-        return "goods_list";
+        return html;
     }
 
 
