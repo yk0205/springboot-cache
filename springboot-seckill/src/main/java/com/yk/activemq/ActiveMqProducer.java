@@ -2,7 +2,6 @@ package com.yk.activemq;
 
 
 import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
 import com.yk.pojo.MiaoshaMessage;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
