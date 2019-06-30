@@ -24,12 +24,13 @@ public class ActiveMqConsumer {
     /**
      * 多线程消费
      */
-    private ThreadPoolExecutor threadPool = new ThreadPoolExecutor(10, 10, 0L,
+    private ThreadPoolExecutor threadPool = new ThreadPoolExecutor(10, 20, 0L,
             TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1));
 
 
     @JmsListener(destination = "miaosha")
     public void listen2Miaosha(Message message) {
+        logger.info("当前线程 {} " ,Thread.currentThread().getName());
         threadPool.submit(() -> miaoshaService.handMsg(message));
     }
 
