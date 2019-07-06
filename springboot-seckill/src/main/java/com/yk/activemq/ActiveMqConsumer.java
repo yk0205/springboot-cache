@@ -1,6 +1,7 @@
 package com.yk.activemq;
 
 
+import com.google.common.collect.Maps;
 import com.yk.service.MiaoshaService;
 
 import org.slf4j.Logger;
@@ -9,9 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 import javax.jms.Message;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.concurrent.*;
 
 @Component
 public class ActiveMqConsumer {
@@ -24,14 +24,21 @@ public class ActiveMqConsumer {
     /**
      * 多线程消费
      */
-    private ThreadPoolExecutor threadPool = new ThreadPoolExecutor(10, 20, 0L,
-            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1));
+    private ExecutorService threadPool = new ThreadPoolExecutor(10, 20, 0L,
+               TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1),(x,y)->{
+        try {
+            y.getQueue().put(x);
+        } catch (InterruptedException e) {
+            logger.error("threadPool failed  ",e);
+        }
+    });
 
 
     @JmsListener(destination = "miaosha")
     public void listen2Miaosha(Message message) {
         logger.info("当前线程 {} " ,Thread.currentThread().getName());
-        threadPool.submit(() -> miaoshaService.handMsg(message));
+        threadPool.execute(() -> miaoshaService.handMsg(message));
+        Map map = Maps.newHashMap();
     }
 
 
